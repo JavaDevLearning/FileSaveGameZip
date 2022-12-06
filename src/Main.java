@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -20,18 +21,21 @@ public class Main {
         for (int i = 0; i < fileList.size(); i++) {
             try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(fileZip));
                  FileInputStream fis = new FileInputStream(fileList.get(i))) {
-                while (i < fileList.size()) {
                     ZipEntry entry = new ZipEntry("packed_save" + i + ".dat");
                     zout.putNextEntry(entry);
                     byte[] buffer = new byte[fis.available()];
                     fis.read(buffer);
                     zout.write(buffer);
                     zout.closeEntry();
-                    i++;
-                }
             } catch (Exception exception) {
                 System.out.println(exception.getMessage());
             }
+        }
+    }
+    public static void deleteFiles(List<String> fileList){
+        for (int i = 0; i < fileList.size(); i++) {
+            File file = new File(fileList.get(i));
+            file.delete();
         }
     }
 
@@ -52,6 +56,7 @@ public class Main {
 
         zipSaveGame("/Users/andreybelkin/Desktop/Games/savegames/saveZip.zip", saveFiles);
 
+        deleteFiles(saveFiles);
     }
 }
 
